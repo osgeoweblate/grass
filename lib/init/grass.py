@@ -55,6 +55,7 @@ import uuid
 import unicodedata
 import argparse
 import json
+from pathlib import Path
 
 
 # mechanism meant for debugging this script (only)
@@ -167,17 +168,12 @@ def fatal(msg):
 
 def readfile(path):
     debug("Reading %s" % path)
-    f = open(path, "r")
-    s = f.read()
-    f.close()
-    return s
+    return Path(path).read_text()
 
 
 def writefile(path, s):
     debug("Writing %s" % path)
-    f = open(path, "w")
-    f.write(s)
-    f.close()
+    Path(path).write_text(s)
 
 
 def call(cmd, **kwargs):
@@ -306,6 +302,7 @@ Geographic Resources Analysis Support System (GRASS GIS).
   FLAG                           {standard_flags}
 
 {env_vars}:
+  GRASS_CONFIG_DIR               {config_dir_var}
   GRASS_GUI                      {gui_var}
   GRASS_HTML_BROWSER             {html_var}
   GRASS_ADDON_PATH               {addon_path_var}
@@ -349,6 +346,7 @@ def help_message(default_gui):
             mapset=_("initial GRASS mapset"),
             full_mapset=_("fully qualified initial mapset directory"),
             env_vars=_("Environment variables relevant for startup"),
+            config_dir_var=_("set root path for configuration directory"),
             gui_var=_("select GUI (text, gui, gtext)"),
             html_var=_("set html web browser for help pages"),
             addon_path_var=_(
@@ -379,8 +377,8 @@ def help_message(default_gui):
     sys.stderr.write(s)
 
 
-def get_grass_config_dir():
-    """Get configuration directory
+def create_grass_config_dir():
+    """Create configuration directory
 
     Determines path of GRASS GIS user configuration directory and creates
     it if it does not exist.
@@ -388,41 +386,25 @@ def get_grass_config_dir():
     Configuration directory is for example used for grass env file
     (the one which caries mapset settings from session to session).
     """
-    # The code is in sync with grass.app.runtime (but not the same).
-    if WINDOWS:
-        grass_config_dirname = f"GRASS{GRASS_VERSION_MAJOR}"
-        win_conf_path = os.getenv("APPDATA")
-        # this can happen with some strange settings
-        if not win_conf_path:
-            fatal(
-                _(
-                    "The APPDATA variable is not set, ask your operating"
-                    " system support"
-                )
-            )
-        if not os.path.exists(win_conf_path):
-            fatal(
-                _(
-                    "The APPDATA variable points to directory which does"
-                    " not exist, ask your operating system support"
-                )
-            )
-        directory = os.path.join(win_conf_path, grass_config_dirname)
-    elif MACOS:
-        version = f"{GRASS_VERSION_MAJOR}.{GRASS_VERSION_MINOR}"
-        return os.path.join(os.getenv("HOME"), "Library", "GRASS", version)
-    else:
-        grass_config_dirname = f".grass{GRASS_VERSION_MAJOR}"
-        directory = os.path.join(os.getenv("HOME"), grass_config_dirname)
+    from grass.app.runtime import get_grass_config_dir
+
+    try:
+        directory = get_grass_config_dir(
+            GRASS_VERSION_MAJOR, GRASS_VERSION_MINOR, os.environ
+        )
+    except (RuntimeError, NotADirectoryError) as e:
+        fatal(f"{e}")
+
     if not os.path.isdir(directory):
         try:
-            os.mkdir(directory)
+            os.makedirs(directory)
         except OSError as e:
             # Can happen as a race condition
             if not e.errno == errno.EEXIST or not os.path.isdir(directory):
                 fatal(
-                    _("Failed to create configuration directory '%s' with error: %s")
-                    % (directory, e.strerror)
+                    _(
+                        "Failed to create configuration directory '{}' with error: {}"
+                    ).format(directory, e.strerror)
                 )
     return directory
 
@@ -502,7 +484,7 @@ def create_gisrc(tmpdir, gisrcrc):
         if "UNKNOWN" in s:
             try_remove(gisrcrc)
             s = None
-    except:
+    except Exception:
         s = None
 
     # Copy the global grassrc file to the session grassrc file
@@ -673,20 +655,18 @@ def check_gui(expected_gui):
             if msg:
                 warning(_("{}\nSwitching to text based interface mode.").format(msg))
                 grass_gui = "text"
-
-    else:
-        # Display a message if a graphical interface was expected
-        if expected_gui != "text":
-            # Set the interface mode to text
-            warning(
-                _(
-                    "It appears that the X Windows system is not active.\n"
-                    "A graphical based user interface is not supported.\n"
-                    "(DISPLAY variable is not set.)\n"
-                    "Switching to text based interface mode."
-                )
+    # Display a message if a graphical interface was expected
+    elif expected_gui != "text":
+        # Set the interface mode to text
+        warning(
+            _(
+                "It appears that the X Windows system is not active.\n"
+                "A graphical based user interface is not supported.\n"
+                "(DISPLAY variable is not set.)\n"
+                "Switching to text based interface mode."
             )
-            grass_gui = "text"
+        )
+        grass_gui = "text"
     return grass_gui
 
 
@@ -732,12 +712,10 @@ def create_location(gisdbase, location, geostring):
         fatal(err.value.strip('"').strip("'").replace("\\n", os.linesep))
 
 
-def can_create_location(gisdbase, location):
+def can_create_location(gisdbase, location) -> bool:
     """Checks if location can be created"""
     path = os.path.join(gisdbase, location)
-    if os.path.exists(path):
-        return False
-    return True
+    return not os.path.exists(path)
 
 
 def cannot_create_location_reason(gisdbase, location):
@@ -872,103 +850,96 @@ def set_mapset(
                 else:
                     suggestion = _("Maybe you meant a different directory.")
                 fatal("{reason}\n{suggestion}".format(**locals()))
-            else:
-                # 'path' is not valid and the user wants to create
-                # mapset on the fly
-                # check if 'location_name' is a valid GRASS location
-                if not is_location_valid(gisdbase, location_name):
-                    if not (tmp_location or tmp_mapset):
-                        # 'location_name' is not a valid GRASS location
-                        # and user requested its creation, so we parsed
-                        # the path wrong and need to move one level
-                        # and use 'PERMANENT' mapset
-                        # (we already got that right in case of tmploc)
-                        gisdbase = os.path.join(gisdbase, location_name)
-                        location_name = mapset
-                        mapset = "PERMANENT"
-                    if tmp_mapset:
-                        suggestion = get_location_invalid_suggestion(
-                            gisdbase, location_name
-                        )
-                        reason = get_location_invalid_reason(gisdbase, location_name)
-                        if suggestion:
-                            fatal("{reason}\n{suggestion}".format(**locals()))
-                        else:
-                            fatal(reason)
-                    if not can_create_location(gisdbase, location_name):
-                        fatal(cannot_create_location_reason(gisdbase, location_name))
-                    # create new location based on the provided EPSG/...
-                    if not geofile:
-                        fatal(_("Provide CRS to create a project"))
-                    if not tmp_location:
-                        # Report report only when new location is not temporary.
-                        message(
-                            _("Creating new GRASS GIS project <{}>...").format(
-                                location_name
-                            )
-                        )
-                    create_location(gisdbase, location_name, geofile)
-                else:
-                    # 'location_name' is a valid GRASS location,
-                    # create new mapset
-                    if os.path.isfile(path):
-                        # not a valid mapset, but dir exists, assuming
-                        # broken/incomplete mapset
-                        fatal(
-                            _(
-                                "Unable to create new mapset <{mapset}>"
-                                " because <{path}> is a file."
-                            ).format(mapset=mapset, path=path)
-                        )
-                    elif os.path.isdir(path):
-                        # not a valid mapset, but dir exists, assuming
-                        # broken/incomplete mapset
-                        warning(
-                            _(
-                                "The mapset <{}> is missing the WIND file"
-                                " (computational region). It will be"
-                                " fixed now. Note that this warning"
-                                " may become an error in future versions."
-                            ).format(mapset)
-                        )
+            # 'path' is not valid and the user wants to create
+            # mapset on the fly
+            # check if 'location_name' is a valid GRASS location
+            elif not is_location_valid(gisdbase, location_name):
+                if not (tmp_location or tmp_mapset):
+                    # 'location_name' is not a valid GRASS location
+                    # and user requested its creation, so we parsed
+                    # the path wrong and need to move one level
+                    # and use 'PERMANENT' mapset
+                    # (we already got that right in case of tmploc)
+                    gisdbase = os.path.join(gisdbase, location_name)
+                    location_name = mapset
+                    mapset = "PERMANENT"
+                if tmp_mapset:
+                    suggestion = get_location_invalid_suggestion(
+                        gisdbase, location_name
+                    )
+                    reason = get_location_invalid_reason(gisdbase, location_name)
+                    if suggestion:
+                        fatal("{reason}\n{suggestion}".format(**locals()))
                     else:
-                        if geofile:
-                            fatal(
-                                _(
-                                    "No CRS is needed for creating mapset <{mapset}>, "
-                                    "but <{geofile}> was provided as CRS."
-                                    " Did you mean to create a new project?"
-                                ).format(mapset=mapset, geofile=geofile)
-                            )
-                        if not tmp_mapset:
-                            message(
-                                _("Creating new GRASS GIS mapset <{}>...").format(
-                                    mapset
-                                )
-                            )
-                        # create mapset directory
-                        os.mkdir(path)
-                        if tmp_mapset:
-                            # The tmp location is handled by (re-)using the
-                            # tmpdir, but we need to take care of the tmp
-                            # mapset which is only a subtree in an existing
-                            # location. We simply remove the tree at exit.
-                            # All mapset cleaning functions should succeed
-                            # because they are called before exit or registered
-                            # only later (and thus called before this one).
-                            # (Theoretically, they could be disabled if that's
-                            # just cleaning a files in the mapset directory.)
-                            atexit.register(
-                                lambda: shutil.rmtree(path, ignore_errors=True)
-                            )
-                    # make directory a mapset, add the region
-                    # copy PERMANENT/DEFAULT_WIND to <mapset>/WIND
-                    s = readfile(
-                        os.path.join(
-                            gisdbase, location_name, "PERMANENT", "DEFAULT_WIND"
+                        fatal(reason)
+                if not can_create_location(gisdbase, location_name):
+                    fatal(cannot_create_location_reason(gisdbase, location_name))
+                # create new location based on the provided EPSG/...
+                if not geofile:
+                    fatal(_("Provide CRS to create a project"))
+                if not tmp_location:
+                    # Report report only when new location is not temporary.
+                    message(
+                        _("Creating new GRASS GIS project <{}>...").format(
+                            location_name
                         )
                     )
-                    writefile(os.path.join(path, "WIND"), s)
+                create_location(gisdbase, location_name, geofile)
+            else:
+                # 'location_name' is a valid GRASS location,
+                # create new mapset
+                if os.path.isfile(path):
+                    # not a valid mapset, but dir exists, assuming
+                    # broken/incomplete mapset
+                    fatal(
+                        _(
+                            "Unable to create new mapset <{mapset}>"
+                            " because <{path}> is a file."
+                        ).format(mapset=mapset, path=path)
+                    )
+                elif os.path.isdir(path):
+                    # not a valid mapset, but dir exists, assuming
+                    # broken/incomplete mapset
+                    warning(
+                        _(
+                            "The mapset <{}> is missing the WIND file"
+                            " (computational region). It will be"
+                            " fixed now. Note that this warning"
+                            " may become an error in future versions."
+                        ).format(mapset)
+                    )
+                else:
+                    if geofile:
+                        fatal(
+                            _(
+                                "No CRS is needed for creating mapset <{mapset}>, "
+                                "but <{geofile}> was provided as CRS."
+                                " Did you mean to create a new project?"
+                            ).format(mapset=mapset, geofile=geofile)
+                        )
+                    if not tmp_mapset:
+                        message(
+                            _("Creating new GRASS GIS mapset <{}>...").format(mapset)
+                        )
+                    # create mapset directory
+                    os.mkdir(path)
+                    if tmp_mapset:
+                        # The tmp location is handled by (re-)using the
+                        # tmpdir, but we need to take care of the tmp
+                        # mapset which is only a subtree in an existing
+                        # location. We simply remove the tree at exit.
+                        # All mapset cleaning functions should succeed
+                        # because they are called before exit or registered
+                        # only later (and thus called before this one).
+                        # (Theoretically, they could be disabled if that's
+                        # just cleaning a files in the mapset directory.)
+                        atexit.register(lambda: shutil.rmtree(path, ignore_errors=True))
+                # make directory a mapset, add the region
+                # copy PERMANENT/DEFAULT_WIND to <mapset>/WIND
+                s = readfile(
+                    os.path.join(gisdbase, location_name, "PERMANENT", "DEFAULT_WIND")
+                )
+                writefile(os.path.join(path, "WIND"), s)
         add_mapset_to_gisrc(gisrc, gisdbase, location_name, mapset)
     else:
         fatal(
@@ -1102,20 +1073,6 @@ def load_env(grass_env_file):
         # create a new environment variable
         os.environ[k] = v
 
-    # Allow for mixed ISIS-GRASS Environment
-    if os.getenv("ISISROOT"):
-        isis = os.getenv("ISISROOT")
-        os.environ["ISIS_LIB"] = isis + os.sep + "lib"
-        os.environ["ISIS_3RDPARTY"] = isis + os.sep + "3rdParty" + os.sep + "lib"
-        os.environ["QT_PLUGIN_PATH"] = isis + os.sep + "3rdParty" + os.sep + "plugins"
-        # os.environ['ISIS3DATA'] = isis + "$ISIS3DATA"
-        libpath = os.getenv("LD_LIBRARY_PATH", "")
-        isislibpath = os.getenv("ISIS_LIB")
-        isis3rdparty = os.getenv("ISIS_3RDPARTY")
-        os.environ["LD_LIBRARY_PATH"] = (
-            libpath + os.pathsep + isislibpath + os.pathsep + isis3rdparty
-        )
-
 
 def install_notranslation():
     # If locale is not supported, _ function might be missing
@@ -1205,7 +1162,7 @@ def set_language(grass_config_dir):
                 encoding = "UTF-8"
                 normalized = locale.normalize("%s.%s" % (language, encoding))
                 locale.setlocale(locale.LC_ALL, normalized)
-            except locale.Error as e:
+            except locale.Error:
                 if language == "en":
                     # A workaround for Python Issue30755
                     # https://bugs.python.org/issue30755
@@ -1231,7 +1188,7 @@ def set_language(grass_config_dir):
                     # See bugs #3441 and #3423
                     try:
                         locale.setlocale(locale.LC_ALL, "C.UTF-8")
-                    except locale.Error as e:
+                    except locale.Error:
                         # All lost. Setting to C as much as possible.
                         # We can not call locale.normalize on C as it
                         # will transform it to en_US and we already know
@@ -1262,10 +1219,8 @@ def set_language(grass_config_dir):
                         # If we got so far, attempts to set up language and locale have
                         # failed on this system.
                         sys.stderr.write(
-                            (
-                                "Failed to enforce user specified language "
-                                f"'{language}' with error: '{e}'\n"
-                            )
+                            "Failed to enforce user specified language "
+                            f"'{language}' with error: '{e}'\n"
                         )
                         sys.stderr.write(
                             "A LANGUAGE environmental variable has been set.\n"
@@ -1616,7 +1571,7 @@ def say_hello():
 
             revision = linerev.split(" ")[1]
             sys.stderr.write(" (" + revision + ")")
-        except:
+        except Exception:
             pass
 
 
@@ -1982,7 +1937,7 @@ def print_params(params):
             try:
                 revision = linerev.split(" ")[1]
                 sys.stdout.write("%s\n" % revision[1:])
-            except:
+            except Exception:
                 sys.stdout.write("No SVN revision defined\n")
         elif arg == "version":
             sys.stdout.write("%s\n" % GRASS_VERSION)
@@ -2244,7 +2199,8 @@ def main():
     # This has to be called before any _() function call!
     # Subsequent functions are using _() calls and
     # thus must be called only after Language has been set.
-    grass_config_dir = get_grass_config_dir()
+    find_grass_python_package()
+    grass_config_dir = create_grass_config_dir()
     set_language(grass_config_dir)
 
     # Set default GUI
@@ -2306,8 +2262,6 @@ def main():
 
     # Create the session grassrc file
     gisrc = create_gisrc(tmpdir, gisrcrc)
-
-    find_grass_python_package()
 
     from grass.app.runtime import (
         ensure_home,
@@ -2438,25 +2392,24 @@ def main():
         else:
             # Use the last used mapset.
             set_mapset(gisrc=gisrc, arg=last_mapset_path)
+    # Mapset was specified in command line parameters.
+    elif params.tmp_location:
+        # tmp loc requires other things to be set as well
+        set_mapset(
+            gisrc=gisrc,
+            geofile=params.geofile,
+            create_new=True,
+            tmp_location=params.tmp_location,
+            tmpdir=tmpdir,
+        )
+    elif params.create_new and params.geofile:
+        set_mapset(
+            gisrc=gisrc, arg=params.mapset, geofile=params.geofile, create_new=True
+        )
+    elif params.tmp_mapset:
+        set_mapset(gisrc=gisrc, arg=params.mapset, tmp_mapset=params.tmp_mapset)
     else:
-        # Mapset was specified in command line parameters.
-        if params.tmp_location:
-            # tmp loc requires other things to be set as well
-            set_mapset(
-                gisrc=gisrc,
-                geofile=params.geofile,
-                create_new=True,
-                tmp_location=params.tmp_location,
-                tmpdir=tmpdir,
-            )
-        elif params.create_new and params.geofile:
-            set_mapset(
-                gisrc=gisrc, arg=params.mapset, geofile=params.geofile, create_new=True
-            )
-        elif params.tmp_mapset:
-            set_mapset(gisrc=gisrc, arg=params.mapset, tmp_mapset=params.tmp_mapset)
-        else:
-            set_mapset(gisrc=gisrc, arg=params.mapset, create_new=params.create_new)
+        set_mapset(gisrc=gisrc, arg=params.mapset, create_new=params.create_new)
 
     # Set GISDBASE, LOCATION_NAME, MAPSET, LOCATION from $GISRC
     # e.g. wxGUI startup screen writes to the gisrc file,

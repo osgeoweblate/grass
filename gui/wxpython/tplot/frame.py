@@ -74,7 +74,7 @@ COLORS = ["b", "g", "r", "c", "m", "y", "k"]
 LINEAR_REG_LINE_COLOR = (0.56, 0.00, 1.00)
 
 
-def check_version(*version):
+def check_version(*version) -> bool:
     """Checks if given version or newer is installed"""
     versionInstalled = []
     for i in mpl.__version__.split("."):
@@ -83,10 +83,7 @@ def check_version(*version):
             versionInstalled.append(v)
         except ValueError:
             versionInstalled.append(0)
-    if versionInstalled < list(version):
-        return False
-    else:
-        return True
+    return not versionInstalled < list(version)
 
 
 def findBetween(s, first, last):
@@ -143,7 +140,10 @@ class TplotFrame(wx.Frame):
         if self._giface.GetMapDisplay():
             self.coorval.OnClose()
             self.cats.OnClose()
-        self.__del__()
+
+        # __del__() and del keyword seem to have differences,
+        # how can self.Destroy(), called after del, work otherwise
+        self.__del__()  # noqa: PLC2801, C2801
         self.Destroy()
 
     def _layout(self):
@@ -739,11 +739,10 @@ class TplotFrame(wx.Frame):
         """Function to set the right labels"""
         if self.drawX != "":
             self.axes2d.set_xlabel(self.drawX)
+        elif self.temporalType == "absolute":
+            self.axes2d.set_xlabel(_("Temporal resolution: %s" % x))
         else:
-            if self.temporalType == "absolute":
-                self.axes2d.set_xlabel(_("Temporal resolution: %s" % x))
-            else:
-                self.axes2d.set_xlabel(_("Time [%s]") % self.unit)
+            self.axes2d.set_xlabel(_("Time [%s]") % self.unit)
         if self.drawY != "":
             self.axes2d.set_ylabel(self.drawY)
         else:
@@ -1414,8 +1413,8 @@ class DataCursor:
             artists = [artists]
         self.artists = artists
         self.convert = convert
-        self.axes = tuple(set(art.axes for art in self.artists))
-        self.figures = tuple(set(ax.figure for ax in self.axes))
+        self.axes = tuple({art.axes for art in self.artists})
+        self.figures = tuple({ax.figure for ax in self.axes})
 
         self.annotations = {}
         for ax in self.axes:

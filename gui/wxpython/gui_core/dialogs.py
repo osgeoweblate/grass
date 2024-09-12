@@ -1330,7 +1330,7 @@ class GroupDialog(wx.Dialog):
                 label = _("Group <%s> was successfully created.") % group
             else:
                 label = _("Group <%s> was successfully changed.") % group
-        else:
+        else:  # noqa: PLR5501
             if create:
                 label = _("Creating of new group <%s> failed.") % group
             else:
@@ -1471,13 +1471,11 @@ class MapLayersDialogBase(wx.Dialog):
         """Method used only by MapLayersDialogForModeler,
         for other subclasses does nothing.
         """
-        pass
 
     def _addApplyButton(self):
         """Method used only by MapLayersDialog,
         for other subclasses does nothing.
         """
-        pass
 
     def _fullyQualifiedNames(self):
         """Adds CheckBox which determines is fully qualified names are retuned."""

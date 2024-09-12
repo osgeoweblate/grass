@@ -596,7 +596,6 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         """Disable GCP manager mode"""
         # leaving the method here but was used only to delete gcpmanagement
         # from layer manager which is now not needed
-        pass
 
     def CreateGCPList(self):
         """Create GCP List Control"""
@@ -626,7 +625,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
         # initialize column sorter
         self.itemDataMap = self.mapcoordlist
         ncols = self.list.GetColumnCount()
-        ColumnSorterMixin.__init__(self, ncols)
+        ColumnSorterMixin(self, ncols)
         # init to ascending sort on first click
         self._colSortFlag = [1] * ncols
 
@@ -802,7 +801,7 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                     wxPen = "highest"
                 else:
                     wxPen = "default"
-            else:
+            else:  # noqa: PLR5501
                 if self.mapcoordlist[key][5] > self.rmsthresh:
                     wxPen = "highest"
                 else:
@@ -1602,7 +1601,6 @@ class GCPPanel(MapPanel, ColumnSorterMixin):
                 self.resize = False
             elif self.resize:
                 event.RequestMore()
-        pass
 
 
 class GCPDisplay(FrameMixin, GCPPanel):
@@ -2527,7 +2525,7 @@ class GrSettingsDialog(wx.Dialog):
                 self.parent.activemap.SetSelection(0)
                 self.parent.activemap.Enable(False)
                 self.parent.GetMapToolbar().Enable("zoommenu", enable=False)
-        else:
+        else:  # noqa: PLR5501
             if not self.parent.show_target:
                 self.parent.show_target = True
                 self.parent._mgr.GetPane("target").Show()

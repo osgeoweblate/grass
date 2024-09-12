@@ -216,9 +216,6 @@ def main():
     if not flags["c"]:
         sys.stdout.write(fs.join(colnames + extracolnames) + "\n")
 
-    # make and print the table:
-    numcols = len(colnames) + len(extracolnames)
-
     # calculate percents if requested
     if units == "percent" and option != "coor":
         # calculate total value
@@ -235,19 +232,13 @@ def main():
 
     # sort results
     if sort:
-        if sort == "asc":
-            if option == "coor":
-                records3.sort(key=lambda r: (float(r[-3]), float(r[-2]), float(r[-1])))
-            else:
-                records3.sort(key=lambda r: float(r[-1]))
+        if option == "coor":
+            records3.sort(
+                key=lambda r: (float(r[-3]), float(r[-2]), float(r[-1])),
+                reverse=(sort != "asc"),
+            )
         else:
-            if option == "coor":
-                records3.sort(
-                    key=lambda r: (float(r[-3]), float(r[-2]), float(r[-1])),
-                    reverse=True,
-                )
-            else:
-                records3.sort(key=lambda r: float(r[-1]), reverse=True)
+            records3.sort(key=lambda r: float(r[-1]), reverse=(sort != "asc"))
 
     for r in records3:
         sys.stdout.write(fs.join(map(str, r)) + "\n")
