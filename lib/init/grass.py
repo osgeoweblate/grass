@@ -1057,9 +1057,7 @@ def load_env(grass_env_file):
             v = v.strip('"')
             # we'll keep expand=True to expand $var's inside "value" because
             # they are within double quotes
-        elif (
-            v.startswith("'") or v.endswith("'") or v.startswith('"') or v.endswith('"')
-        ):
+        elif v.startswith(("'", '"')) or v.endswith(("'", '"')):
             # here, let's try to ignore unmatching single/double quotes, which
             # might be a multi-line variable or just a user error
             debug("Ignoring multi-line environmental variable {0}".format(k))
@@ -1314,16 +1312,17 @@ def lock_mapset(mapset_path, force_gislock_removal, user):
                 "You can force launching GRASS using -f flag"
                 " (note that you need permission for this operation)."
                 " Have another look in the processor "
-                "manager just to be sure..." % {"user": user, "file": lockfile}
-            )
+                "manager just to be sure..."
+            ) % {"user": user, "file": lockfile}
+
         else:
             try_remove(lockfile)
             message(
                 _(
                     "%(user)s is currently running GRASS in selected mapset"
                     " (file %(file)s found). Forcing to launch GRASS..."
-                    % {"user": user, "file": lockfile}
                 )
+                % {"user": user, "file": lockfile}
             )
     elif ret != 0:
         msg = (
