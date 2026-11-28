@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -25245,22 +25245,28 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr ""
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
 msgstr ""
 
-msgid "Unregister maps"
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
 msgstr ""
 
-#, python-format
-msgid "Unable to find %s map <%s> in temporal database"
+#, python-brace-format
+msgid "Unable to read map list from file <{filename}>: {error}"
 msgstr ""
 
-#, python-format
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Collecting SQL statements to unregister {} maps"
 msgstr ""
 
-msgid "Unregister maps from the temporal database"
+#, python-brace-format
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
+msgstr ""
+
+msgid "Unregistering maps from space time dataset <{}>"
+msgstr ""
+
+msgid "Unregistering maps from the temporal database"
 msgstr ""
 
 msgid "The number of columns must be equal to the number of space time raster datasets"
@@ -27098,6 +27104,10 @@ msgid "Native"
 msgstr ""
 
 msgid "Print current status in shell script style"
+msgstr ""
+
+#, c-format
+msgid "%s= or %s= must be specified"
 msgstr ""
 
 #, c-format

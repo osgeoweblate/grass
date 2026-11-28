@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grassmods_zh\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2026-06-25 11:49+0000\n"
 "Last-Translator: Jietao Wang <quaternary@163.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://weblate.osgeo.org/projects/grass-gis/grassmods/zh_Hans/>\n"
@@ -25481,28 +25481,39 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "新的栅格文件的名称"
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
+
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
+
+#, fuzzy, python-brace-format
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr "无法打开输入文件<%s>"
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, python-brace-format
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr ""
 
 #, fuzzy
-msgid "Unregister maps"
-msgstr "结果图"
-
-#, python-format
-msgid "Unable to find %s map <%s> in temporal database"
-msgstr ""
-
-#, fuzzy, python-format
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr ""
 "#-#-#-#-#  grassmods_zh.po (grassmods_zh)  #-#-#-#-#\n"
 "输出栅格图的名称\n"
 "#-#-#-#-#  grassmods_zh.po (grassmods_zh)  #-#-#-#-#\n"
 "输出栅格文件的名称"
 
-msgid "Unregister maps from the temporal database"
+#, fuzzy
+msgid "Unregistering maps from the temporal database"
 msgstr ""
+"#-#-#-#-#  grassmods_zh.po (grassmods_zh)  #-#-#-#-#\n"
+"输出栅格图的名称\n"
+"#-#-#-#-#  grassmods_zh.po (grassmods_zh)  #-#-#-#-#\n"
+"输出栅格文件的名称"
 
 #, fuzzy
 msgid "The number of columns must be equal to the number of space time raster datasets"
@@ -27333,6 +27344,10 @@ msgid "Native"
 msgstr ""
 
 msgid "Print current status in shell script style"
+msgstr ""
+
+#, c-format
+msgid "%s= or %s= must be specified"
 msgstr ""
 
 #, c-format
@@ -34486,6 +34501,10 @@ msgstr ""
 
 msgid "Image file"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Unregister maps"
+#~ msgstr "结果图"
 
 #, fuzzy, c-format
 #~ msgid "Invalid random seed <%s>"

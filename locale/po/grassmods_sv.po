@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2026-10-05 10:33+0000\n"
 "Last-Translator: Daniel Nylander <daniel@danielnylander.se>\n"
 "Language-Team: Swedish <https://weblate.osgeo.org/projects/grass-gis/grassmods/sv/>\n"
@@ -25596,28 +25596,34 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "Snaps temporalt kartorna i en rumtid dataset."
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
-msgstr "%s= eller %s= måste anges"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
 
-#, fuzzy
-#| msgid "Register Null maps"
-msgid "Unregister maps"
-msgstr "Registrera nollkartor"
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
 
-#, fuzzy, python-format
+#, fuzzy, python-brace-format
+#| msgid "Unable to remove file {file}: {message}"
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr "Det går inte att ta bort filen {file}: {message}"
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, fuzzy, python-brace-format
 #| msgid "Unable to open default database"
-msgid "Unable to find %s map <%s> in temporal database"
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr "Det går inte att öppna standarddatabasen"
 
-#, fuzzy, python-format
+#, fuzzy
 #| msgid "Lists registered maps of a space time raster dataset."
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr "Visar en lista över registrerade kartor för en rasterdatauppsättning för rymdtid."
 
 #, fuzzy
 #| msgid "Remove stds and unregister maps from temporal database"
-msgid "Unregister maps from the temporal database"
+msgid "Unregistering maps from the temporal database"
 msgstr "Ta bort stds och avregistrera kartor från temporal databas"
 
 #, fuzzy
@@ -27483,6 +27489,10 @@ msgstr "Inbyggd"
 
 msgid "Print current status in shell script style"
 msgstr "Skriv ut aktuell status i skal-skriptformat"
+
+#, c-format
+msgid "%s= or %s= must be specified"
+msgstr "%s= eller %s= måste anges"
 
 #, c-format
 msgid "%s= must be specified"
@@ -34739,6 +34749,11 @@ msgstr "Visa BMP-bilder från PNG-drivrutinen."
 
 msgid "Image file"
 msgstr "Bildfil"
+
+#, fuzzy
+#~| msgid "Register Null maps"
+#~ msgid "Unregister maps"
+#~ msgstr "Registrera nollkartor"
 
 #~ msgid "Either use profile option or coordinate_file  option, but not both"
 #~ msgstr "Använd antingen profile-alternativet eller coordinate_file-alternativet, men inte båda"

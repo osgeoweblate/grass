@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grassmods_ar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2025-07-26 01:36+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Arabic <https://weblate.osgeo.org/projects/grass-gis/grassmods/ar/>\n"
@@ -28286,24 +28286,30 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "اسم الخريطة الراسترية الجديدة"
 
-#, fuzzy, c-format, python-format
-msgid "%s= or %s= must be specified"
-msgstr "طبقتين يجب تحديدهم"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
 
-#, fuzzy
-msgid "Unregister maps"
-msgstr "اسم الراستر المدخل"
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
 
-#, fuzzy, python-format
-msgid "Unable to find %s map <%s> in temporal database"
+#, fuzzy, python-brace-format
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr "[%s]لم يتم فتح ملف الخلية ل "
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, fuzzy, python-brace-format
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr "%s لم يتم فتح قاعدة البيانات"
 
-#, fuzzy, python-format
-msgid "Unregister maps from space time dataset <%s>"
+#, fuzzy
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr "عرض ملفات الراستر للموقع والخروج"
 
 #, fuzzy
-msgid "Unregister maps from the temporal database"
+msgid "Unregistering maps from the temporal database"
 msgstr "اختر البيانات من قاعدة البيانات"
 
 #, fuzzy
@@ -30355,6 +30361,10 @@ msgstr ""
 #, fuzzy
 msgid "Print current status in shell script style"
 msgstr "طباعة الأحصاء فى صورة شل سكربت"
+
+#, fuzzy, c-format
+msgid "%s= or %s= must be specified"
+msgstr "طبقتين يجب تحديدهم"
 
 #, fuzzy, c-format
 msgid "%s= must be specified"
@@ -38339,6 +38349,10 @@ msgstr ""
 #, fuzzy
 msgid "Image file"
 msgstr "ملف المدخل"
+
+#, fuzzy
+#~ msgid "Unregister maps"
+#~ msgstr "اسم الراستر المدخل"
 
 #, fuzzy, c-format
 #~ msgid "Invalid random seed <%s>"

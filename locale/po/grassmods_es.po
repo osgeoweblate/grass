@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grassmods_es\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2026-10-25 21:39+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Spanish <https://weblate.osgeo.org/projects/grass-gis/grassmods/es/>\n"
@@ -25997,28 +25997,33 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "Autoensambla temporalmente los mapas de un conjuto de datos espacio temporal."
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
-msgstr "Se debe especificar %s o %s"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
 
-#, fuzzy
-#| msgid "Register Null maps"
-msgid "Unregister maps"
-msgstr "Registrado mapas Nulos"
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
 
-#, fuzzy, python-format
+#, fuzzy, python-brace-format
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr "No se puede abrir el archivo rule <%s>"
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, fuzzy, python-brace-format
 #| msgid "Unable to open default database"
-msgid "Unable to find %s map <%s> in temporal database"
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr "No se puede abrir la base de datos predeterminada"
 
-#, fuzzy, python-format
+#, fuzzy
 #| msgid "Lists registered maps of a space time raster dataset."
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr "Enlistar mapas registrados en un conjunto de datos ráster espacio temporales."
 
 #, fuzzy
 #| msgid "Remove all registered maps from the temporal and also from the spatial database"
-msgid "Unregister maps from the temporal database"
+msgid "Unregistering maps from the temporal database"
 msgstr "Elimina todos los mapas registrados de la base de datos temporal y también la espacial"
 
 #, fuzzy
@@ -27889,6 +27894,10 @@ msgstr "Nativo"
 
 msgid "Print current status in shell script style"
 msgstr "Mostrar estatus actual en estilo de script de consola de comandos"
+
+#, c-format
+msgid "%s= or %s= must be specified"
+msgstr "Se debe especificar %s o %s"
 
 #, c-format
 msgid "%s= must be specified"
@@ -35232,6 +35241,11 @@ msgstr "Ver imágenes BMP desde el controlador PNG."
 
 msgid "Image file"
 msgstr "Archivo de imagen"
+
+#, fuzzy
+#~| msgid "Register Null maps"
+#~ msgid "Unregister maps"
+#~ msgstr "Registrado mapas Nulos"
 
 #~ msgid "Either use profile option or coordinate_file  option, but not both"
 #~ msgstr "Usar ya sea la opción profile o coordinate_file, pero no ambas"

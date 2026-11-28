@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grasslibs_fr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
-"PO-Revision-Date: 2026-11-17 23:35+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
+"PO-Revision-Date: 2026-11-28 10:53+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: French <https://weblate.osgeo.org/projects/grass-gis/grasslibs/fr/>\n"
 "Language: fr\n"
@@ -7091,7 +7091,7 @@ msgstr ""
 
 #, python-brace-format
 msgid "Mapset <{mapset}> doesn't exist in GRASS project <{location}>"
-msgstr "Le jeu de cartes <{mapset}> n'existe pas dans le projet GRASS <{location}>"
+msgstr "Le jeu de cartes <{mapset}> n’existe pas dans le projet GRASS <{location}>"
 
 #, python-format
 msgid "<%s> is not a GRASS Mapset because it is not a directory"
@@ -7127,7 +7127,7 @@ msgstr "<%s> n'est pas un Secteur GRASS valide car le jeu de cartes PERMANENT ne
 
 #, python-brace-format
 msgid "Project <{location_path}> is invalid for an unknown reason"
-msgstr "Le projet <{location_path}> est invalide pour une raison inconnue"
+msgstr "Le projet <{location_path}> n’est pas valide pour une raison inconnue"
 
 #, python-brace-format
 msgid "<{location}> looks like a mapset, not a project. Did you mean just <{one_dir_up}>?"
@@ -8223,15 +8223,13 @@ msgstr "L'option intervalle sera ignorée car il y a un horodatage dans le fichi
 msgid "Unable to update {t} map <{mid}>. The map does not exist."
 msgstr "Impossible de mettre à jour la carte {t} <{mid}>. La carte n'existe pas."
 
-#, fuzzy, python-brace-format
-#| msgid "Unable to register %(t)s map <%(id)s> with layer %(l)s. The map has timestamp and the start time is not set."
+#, python-brace-format
 msgid "Unable to register {t} map <{mid}> with layer {l}. The map has no timestamp and the start time is not set."
-msgstr "Impossible de référencer la carte %(t)s <%(id)s> avec la couche %(l)s. La carte a un horodatage et le temps de départ n'est pas défini."
+msgstr "Impossible de référencer la carte {t} <{mid}> avec la couche {l}. La carte a un horodatage et le temps de départ n'est pas défini."
 
-#, fuzzy, python-brace-format
-#| msgid "Unable to register %(t)s map <%(id)s>. The map has no timestamp and the start time is not set."
+#, python-brace-format
 msgid "Unable to register {t} map <{mid}>. The map has no timestamp and the start time is not set."
-msgstr "Impossible de référencer la carte %(t)s <%(id)s>. La carte n'a pas d'horodatage et le temps de début n'est pas défini."
+msgstr "Impossible de référencer la carte {t} <{mid}>. La carte n'a pas d'horodatage et le temps de début n'est pas défini."
 
 #, fuzzy
 #| msgid "%(u)s= can only be set for relative time"
@@ -8243,20 +8241,17 @@ msgstr "%(u)s= peut être défini uniquement pour un temps relatif"
 msgid "unit must be set in case of relative time stamps"
 msgstr "%(u)s= doit être défini dans le cas d'un horodatage relatif"
 
-#, fuzzy, python-brace-format
-#| msgid "Map is already registered in temporal database. Unable to update %(t)s map <%(id)s> with layer %(l)s. Overwrite flag is not set."
+#, python-brace-format
 msgid "Map is already registered in temporal database. Unable to update {t} map <{mid}> with layer {l}. Overwrite flag is not set."
-msgstr "La carte est déjà référencée dans la base temporelle. Impossible de mettre à jour la carte %(t)s <%(id)s> avec la couche %(l)s. L''écrasement automatique n'est pas activé."
+msgstr "La carte est déjà référencée dans la base de données temporelle. Impossible de mettre à jour la carte {t} <{mid}> avec la couche {l}. L'option d'écrasement n'est pas activée."
 
-#, fuzzy, python-brace-format
-#| msgid "Map is already registered in temporal database. Unable to update %(t)s map <%(id)s>. Overwrite flag is not set."
+#, python-brace-format
 msgid "Map is already registered in temporal database. Unable to update {t} map <{mid}>. Overwrite flag is not set."
-msgstr "La carte est déjà référencée dans la base temporelle. Impossible de mettre à jour la carte %(t)s <%(id)s>. L'écrasement automatique n'est pas activé."
+msgstr "La carte est déjà référencée dans la base de données temporelle. Impossible de mettre à jour la carte {t} <{mid}>. L'option d'écrasement n'est pas activée."
 
-#, fuzzy, python-brace-format
-#| msgid "Unable to update %(t)s map <%(id)s> with layer %(l)s. The temporal types are different."
+#, python-brace-format
 msgid "Unable to update {t} map <{mid}> with layer {l}. The temporal types are different."
-msgstr "Impossible de mettre à jour lacarte %(t)s <%(id)s> avec la couche %(l)s. Les types temporels sont différents."
+msgstr "Impossible de mettre à jour la carte {t} <{mid}> avec la couche {l}. Les types temporels sont différents."
 
 #, python-brace-format
 msgid "Unable to update {t} map <{mid}>. The temporal types are different."

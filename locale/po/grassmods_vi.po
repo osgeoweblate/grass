@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grassmods_vi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2025-07-26 01:37+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Vietnamese <https://weblate.osgeo.org/projects/grass-gis/grassmods/vi/>\n"
@@ -25326,24 +25326,31 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "Tên của CSDL mới"
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
+
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
+
+#, python-brace-format
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr ""
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, python-brace-format
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr ""
 
 #, fuzzy
-msgid "Unregister maps"
-msgstr "Tên của bản đồ raster đường dẫn phát tán"
-
-#, python-format
-msgid "Unable to find %s map <%s> in temporal database"
-msgstr ""
-
-#, fuzzy, python-format
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr "Tên của bản đồ raster đầu ra"
 
-msgid "Unregister maps from the temporal database"
-msgstr ""
+#, fuzzy
+msgid "Unregistering maps from the temporal database"
+msgstr "Tên của bản đồ raster đầu ra"
 
 #, fuzzy
 msgid "The number of columns must be equal to the number of space time raster datasets"
@@ -27160,6 +27167,10 @@ msgid "Native"
 msgstr ""
 
 msgid "Print current status in shell script style"
+msgstr ""
+
+#, c-format
+msgid "%s= or %s= must be specified"
 msgstr ""
 
 #, c-format
@@ -34290,6 +34301,10 @@ msgstr ""
 
 msgid "Image file"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Unregister maps"
+#~ msgstr "Tên của bản đồ raster đường dẫn phát tán"
 
 #, fuzzy, c-format
 #~ msgid "Invalid random seed <%s>"

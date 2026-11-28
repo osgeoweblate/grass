@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 20:04+0000\n"
+"POT-Creation-Date: 2026-11-21 21:02+0000\n"
 "PO-Revision-Date: 2026-10-31 18:56+0000\n"
 "Last-Translator: Edouard Choiniere <echoix@users.noreply.weblate.osgeo.org>\n"
 "Language-Team: Hindi <https://weblate.osgeo.org/projects/grass-gis/grassmods/hi/>\n"
@@ -25664,28 +25664,34 @@ msgstr ""
 msgid "Unable to temporally shift the space time %s dataset <%s>"
 msgstr "अंतरिक्ष समय डेटासेट के मानचित्रों को अस्थायी रूप से स्नैप करता है।"
 
-#, c-format, python-format
-msgid "%s= or %s= must be specified"
-msgstr "%s= या %s= निर्दिष्ट किया जाना चाहिए"
+msgid "Unable to connect to a temporal database in the current mapset. Nothing to unregister"
+msgstr ""
 
-#, fuzzy
-#| msgid "Register Null maps"
-msgid "Unregister maps"
-msgstr "शून्य मानचित्र पंजीकृत करें"
+#, python-brace-format
+msgid "Maps can only be unregistered from a space time dataset in the current mapset, but <{mapid}> is in mapset <{mapset}>"
+msgstr ""
 
-#, fuzzy, python-format
+#, fuzzy, python-brace-format
+#| msgid "Unable to remove file {file}: {message}"
+msgid "Unable to read map list from file <{filename}>: {error}"
+msgstr "फ़ाइल को हटाने में असमर्थ {file}: {message}"
+
+msgid "Collecting SQL statements to unregister {} maps"
+msgstr ""
+
+#, fuzzy, python-brace-format
 #| msgid "Unable to open default database"
-msgid "Unable to find %s map <%s> in temporal database"
+msgid "Unable to find {map_type} map <{map_id}> in temporal database"
 msgstr "डिफ़ॉल्ट डेटाबेस खोलने में असमर्थ"
 
-#, fuzzy, python-format
+#, fuzzy
 #| msgid "Lists registered maps of a space time raster dataset."
-msgid "Unregister maps from space time dataset <%s>"
+msgid "Unregistering maps from space time dataset <{}>"
 msgstr "स्पेस टाइम रैस्टर डेटासेट के पंजीकृत मानचित्रों को सूचीबद्ध करता है।"
 
 #, fuzzy
 #| msgid "Remove stds and unregister maps from temporal database"
-msgid "Unregister maps from the temporal database"
+msgid "Unregistering maps from the temporal database"
 msgstr "अस्थायी डेटाबेस से एसटीडी हटाएं और मानचित्र अपंजीकृत करें"
 
 #, fuzzy
@@ -27553,6 +27559,10 @@ msgstr "देशी"
 
 msgid "Print current status in shell script style"
 msgstr "वर्तमान स्थिति को शेल स्क्रिप्ट शैली में प्रिंट करें"
+
+#, c-format
+msgid "%s= or %s= must be specified"
+msgstr "%s= या %s= निर्दिष्ट किया जाना चाहिए"
 
 #, c-format
 msgid "%s= must be specified"
@@ -34810,6 +34820,11 @@ msgstr "पीएनजी ड्राइवर से बीएमपी छ�
 
 msgid "Image file"
 msgstr "छवि फ़ाइल"
+
+#, fuzzy
+#~| msgid "Register Null maps"
+#~ msgid "Unregister maps"
+#~ msgstr "शून्य मानचित्र पंजीकृत करें"
 
 #~ msgid "Either use profile option or coordinate_file  option, but not both"
 #~ msgstr "या तो प्रोफ़ाइल विकल्प या कोऑर्डिनेट_फ़ाइल विकल्प का उपयोग करें, लेकिन दोनों का नहीं"
